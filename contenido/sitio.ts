@@ -3,12 +3,22 @@
  * cambiar este archivo y sus fotos: ver README.md.
  */
 
-/* Fotos de ejemplo de Unsplash. Las del cliente van en /public, p. ej. "/portada/1.jpg". */
+/* Fotos de ejemplo de Unsplash. */
 const ejemplo = (id: string) => `https://images.unsplash.com/photo-${id}?auto=format&q=80&w=2400`;
 
+type Servicio = { nombre: string; precio: string; texto: string; incluye: string[]; foto: string; alt: string };
+type Persona = { saludo: string; parrafos: string[]; foto: string; alt: string; datos?: { valor: string; texto: string }[] };
+export type Video = { titulo: string; youtube: string; portada: string; alt: string };
+
+/* En la web real estas fotos se sirven desde /web y se pueden cambiar desde la gestión. */
+const ranura = (nombre: string, foto: string) => (process.env.NEXT_PUBLIC_MODO === "real" ? `/web/${nombre}.jpg` : foto);
+
 export const sitio = {
-  /* En modo ejemplo los formularios no envían nada y se avisa de que el contenido es ficticio. */
-  demo: true,
+  /*
+   * En modo ejemplo los formularios no envían nada y se avisa de que el contenido es ficticio.
+   * `npm run build` crea la demo y `npm run build:real` la web del cliente.
+   */
+  demo: process.env.NEXT_PUBLIC_MODO !== "real",
 
   nombre: "Estudio Olivo",
   lema: "Fotografía de bodas, retratos y familias en Córdoba.",
@@ -29,18 +39,19 @@ export const sitio = {
   },
 
   portada: [
-    { src: ejemplo("1532712938310-34cb3982ef74"), alt: "Pareja de novios caminando por una colina al atardecer" },
-    { src: ejemplo("1520854221256-17451cc331bf"), alt: "Novios cogidos de la mano sobre la hierba" },
-    { src: ejemplo("1542037104857-ffbb0b9155fb"), alt: "Familia jugando en un campo" },
+    { src: ranura("portada-1", ejemplo("1532712938310-34cb3982ef74")), alt: "Pareja de novios caminando por una colina al atardecer" },
+    { src: ranura("portada-2", ejemplo("1520854221256-17451cc331bf")), alt: "Novios cogidos de la mano sobre la hierba" },
+    { src: ranura("portada-3", ejemplo("1542037104857-ffbb0b9155fb")), alt: "Familia jugando en un campo" },
   ],
 
+  /* Deja la lista vacía para no mostrar servicios ni precios. */
   servicios: [
     {
       nombre: "Bodas",
       precio: "Desde 1.200 €",
       texto: "Te acompaño durante todo el día, sin interrumpir y sin que tengas que estar pendiente de la cámara.",
       incluye: ["Hasta ocho horas de reportaje", "Unas 400 fotos editadas", "Galería privada para compartir", "Sesión previa de pareja"],
-      foto: ejemplo("1606216794079-73f85bbd57d5"),
+      foto: ranura("servicio-1", ejemplo("1606216794079-73f85bbd57d5")),
       alt: "Novios abrazados bajo el velo",
     },
     {
@@ -48,7 +59,7 @@ export const sitio = {
       precio: "Desde 120 €",
       texto: "Para tu web, tu trabajo o simplemente para tener una foto en la que te reconozcas.",
       incluye: ["Una hora de sesión", "15 fotos editadas", "Asesoramiento de ropa y lugar", "Entrega en una semana"],
-      foto: ejemplo("1506863530036-1efeddceb993"),
+      foto: ranura("servicio-2", ejemplo("1506863530036-1efeddceb993")),
       alt: "Retrato en blanco y negro de una mujer",
     },
     {
@@ -56,25 +67,42 @@ export const sitio = {
       precio: "Desde 180 €",
       texto: "Una tarde al aire libre, jugando, para guardar cómo sois ahora.",
       incluye: ["Hora y media de sesión", "30 fotos editadas", "Lugar a elegir en la provincia", "Galería privada para compartir"],
-      foto: ejemplo("1628705250580-80b96d4657f6"),
+      foto: ranura("servicio-3", ejemplo("1628705250580-80b96d4657f6")),
       alt: "Padres e hijas mirando al horizonte en el campo",
     },
-  ],
+  ] as Servicio[],
 
-  sobre: {
-    saludo: "Hola, soy Marta.",
-    parrafos: [
-      "Llevo diez años haciendo fotos de la gente que importa a otras personas. Me gusta llegar pronto, hablar poco y estar atenta a lo que pasa cuando nadie posa.",
-      "Trabajo sola o con una segunda fotógrafa en las bodas grandes, y edito cada foto yo misma para que todo el reportaje tenga la misma luz y el mismo color.",
-    ],
-    foto: ejemplo("1541516160071-4bb0c5af65ba"),
-    alt: "La fotógrafa con su cámara",
-    datos: [
-      { valor: "10", texto: "años de oficio" },
-      { valor: "180", texto: "bodas contadas" },
-      { valor: "4 sem.", texto: "de entrega media" },
-    ],
+  equipo: {
+    menu: "Sobre mí",
+    /* Déjalo vacío si solo hay una persona. */
+    titulo: "",
+    personas: [
+      {
+        saludo: "Hola, soy Marta.",
+        parrafos: [
+          "Llevo diez años haciendo fotos de la gente que importa a otras personas. Me gusta llegar pronto, hablar poco y estar atenta a lo que pasa cuando nadie posa.",
+          "Trabajo sola o con una segunda fotógrafa en las bodas grandes, y edito cada foto yo misma para que todo el reportaje tenga la misma luz y el mismo color.",
+        ],
+        foto: ranura("equipo-1", ejemplo("1541516160071-4bb0c5af65ba")),
+        alt: "La fotógrafa con su cámara",
+        datos: [
+          { valor: "10", texto: "años de oficio" },
+          { valor: "180", texto: "bodas contadas" },
+          { valor: "4 sem.", texto: "de entrega media" },
+        ],
+      },
+    ] as Persona[],
   },
+
+  /* Vídeos de YouTube: en `youtube` va el código que aparece detrás de "v=" en el enlace. */
+  videos: [] as Video[],
+
+  /* true: las fotos pasan solas y el mosaico queda detrás de "Ver todas las fotos". */
+  galeriaAutomatica: false,
+  notaGaleria: "",
+
+  /* Opciones del formulario cuando no hay servicios. */
+  opcionesContacto: [] as string[],
 
   /* Deja la lista vacía si todavía no hay opiniones reales: la sección desaparece. */
   opiniones: [

@@ -1,0 +1,13 @@
+# Datos del despliegue real en Cloudflare Pages. Ver ALTA-CLIENTE.md
+name = "plantilla-fotografia"
+compatibility_date = "2026-10-01"
+pages_build_output_dir = "out"
+
+[[kv_namespaces]]
+binding = "DATOS"
+id = "SUSTITUIR_POR_EL_ID_DEL_ESPACIO_KV"
+
+[[d1_databases]]
+binding = "ESTADISTICAS"
+database_name = "estadisticas"
+database_id = "SUSTITUIR_POR_EL_ID_DE_LA_BASE_DE_DATOS"

@@ -1,6 +1,7 @@
 "use client";
 
 export const EVENTO_SERVICIO = "elegir-servicio";
+export const EVENTO_FECHA = "elegir-fecha";
 
 export function BotonReservar({ servicio }: { servicio: string }) {
   return (

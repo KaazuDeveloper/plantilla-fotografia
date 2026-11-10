@@ -43,3 +43,7 @@ next-env.d.ts
 # fotos originales del cliente (la web usa las de public/galeria)
 /fotos-cliente/*/*
 !/fotos-cliente/*/.gitkeep
+
+# Cloudflare
+.wrangler
+.dev.vars

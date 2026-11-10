@@ -63,3 +63,19 @@ dialog::backdrop {
   html { scroll-behavior: auto; }
   .acercar, .aparecer { animation: none; }
 }
+
+@keyframes tira {
+  to { transform: translateX(-50%); }
+}
+.tira {
+  animation: tira linear infinite;
+}
+.tira:hover,
+.tira:focus-within,
+.tira[data-pausada="true"] {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tira { animation: none; }
+  .tira-marco { overflow-x: auto; }
+}

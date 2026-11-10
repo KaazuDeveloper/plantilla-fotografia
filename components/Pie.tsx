@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AvisoCookies, EnlaceCookies } from "./AvisoCookies";
 import { sitio } from "@/contenido/sitio";
 
 export function Pie() {
@@ -9,11 +10,14 @@ export function Pie() {
           © {sitio.anio} {sitio.nombre}
           {sitio.demo && " · Web de ejemplo con contenido ficticio y fotos de Unsplash"}
         </p>
-        <p className="flex gap-5">
+        <p className="flex flex-wrap gap-x-5 gap-y-1">
           <Link href="/aviso-legal" className="hover:text-white">Aviso legal y privacidad</Link>
+          <EnlaceCookies />
+          <Link href="/acceso" className="hover:text-white">Acceso</Link>
           <a href={sitio.credito.url} target="_blank" rel="noreferrer" className="hover:text-white">{sitio.credito.texto}</a>
         </p>
       </div>
+      <AvisoCookies />
     </footer>
   );
 }

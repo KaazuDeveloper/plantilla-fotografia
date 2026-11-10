@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "fotos": "node scripts/preparar-fotos.mjs"
+    "fotos": "node scripts/preparar-fotos.mjs",
+    "build:real": "NEXT_PUBLIC_MODO=real next build",
+    "clave": "node scripts/generar-clave.mjs",
+    "subir-claves": "wrangler pages secret bulk .dev.vars",
+    "publicar": "npm run build:real && wrangler pages deploy --branch main",
+    "probar:real": "npm run build:real && wrangler d1 execute ESTADISTICAS --local --file=servidor/estadisticas.sql && wrangler pages dev --port 8788",
+    "preparar-bd": "wrangler d1 execute ESTADISTICAS --remote --yes --file=servidor/estadisticas.sql"
   },
   "dependencies": {
     "next": "16.4.6",
@@ -15,6 +21,7 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261110.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -23,6 +30,7 @@
     "eslint-config-next": "16.4.6",
     "sharp": "^0.35.5",
     "tailwindcss": "4.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.159.0"
   }
 }

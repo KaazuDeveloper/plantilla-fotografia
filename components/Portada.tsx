@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { ImagenRanura } from "./ImagenRanura";
 import { sitio } from "@/contenido/sitio";
 
 const INTERVALO = 6500;
@@ -23,7 +23,8 @@ export function Portada() {
           aria-hidden={i !== actual}
           className={`absolute inset-0 transition-opacity duration-[1400ms] ${i === actual ? "opacity-100" : "opacity-0"}`}
         >
-          <Image
+          <ImagenRanura
+            archivo={`portada-${i + 1}.jpg`}
             src={foto.src}
             alt={foto.alt}
             fill

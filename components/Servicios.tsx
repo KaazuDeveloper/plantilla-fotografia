@@ -1,8 +1,9 @@
-import Image from "next/image";
 import { sitio } from "@/contenido/sitio";
 import { BotonReservar } from "./BotonReservar";
+import { ImagenRanura } from "./ImagenRanura";
 
 export function Servicios() {
+  if (sitio.servicios.length === 0) return null;
   return (
     <section id="servicios" className="bg-mist py-20 md:py-32">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
@@ -11,7 +12,7 @@ export function Servicios() {
           {sitio.servicios.map((s, i) => (
             <article key={s.nombre} className="grid items-center gap-7 md:grid-cols-12 md:gap-16">
               <div className={`relative aspect-[4/3] overflow-hidden md:col-span-7 ${i % 2 ? "md:order-2" : ""}`}>
-                <Image src={s.foto} alt={s.alt} fill sizes="(min-width: 768px) 58vw, 100vw" className="object-cover" />
+                <ImagenRanura archivo={`servicio-${i + 1}.jpg`} src={s.foto} alt={s.alt} fill sizes="(min-width: 768px) 58vw, 100vw" className="object-cover" />
               </div>
               <div className="md:col-span-5">
                 <h3 className="text-[clamp(2rem,3.6vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.035em]">{s.nombre}</h3>

@@ -24,6 +24,8 @@
 - 1 foto por cada servicio
 - 1 foto tuya
 
+Luego podrás cambiar y añadir fotos tú mismo desde tu panel de gestión.
+
 **Servicios** (por cada uno)
 - Nombre
 - Precio o "desde X €"
@@ -37,5 +39,8 @@
 **Opiniones reales de clientes** (2 o 3, con su permiso y su nombre). Si no tienes, esa parte no aparece.
 
 **Preguntas frecuentes**: las que más te hacen, con su respuesta.
+
+**Fechas disponibles**: las que ya tengas libres, si quieres que la web salga con ellas. Luego podrás cambiarlas tú desde
+el móvil.
 
 **Para el aviso legal**: nombre completo, NIF y dirección del titular.

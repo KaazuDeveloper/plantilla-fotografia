@@ -29,8 +29,21 @@ export default function AvisoLegal() {
           supresión escribiendo a {contacto.email}.
         </p>
 
-        <h2 className="mb-2 mt-10 text-[21px] font-semibold tracking-[-0.02em] text-ink">Cookies</h2>
-        <p>Esta web no utiliza cookies de análisis ni de publicidad.</p>
+        <h2 className="mb-2 mt-10 text-[21px] font-semibold tracking-[-0.02em] text-ink">Estadísticas</h2>
+        <p>
+          Esta web cuenta las visitas de forma anónima y agregada: el número de visitas de cada día, el tipo de sitio desde el que
+          se llega y si es un móvil o un ordenador. No se guarda tu dirección IP ni nada que permita identificarte. La web está
+          alojada en Cloudflare, que necesita tratar la dirección IP de forma técnica para poder servir la página.
+        </p>
+
+        <h2 id="cookies" className="mb-2 mt-10 text-[21px] font-semibold tracking-[-0.02em] text-ink">Cookies</h2>
+        <p>
+          Esta web no utiliza cookies de análisis ni de publicidad. La única cookie propia es técnica y solo se crea cuando la persona
+          que administra la web inicia sesión.
+          {sitio.videos.length > 0
+            ? " Los vídeos están alojados en YouTube, que puede instalar sus propias cookies. Por eso solo se cargan si las aceptas y pulsas reproducir. Tu elección se guarda en tu navegador y puedes cambiarla cuando quieras en el enlace Cookies, al final de la página."
+            : " Tampoco guarda información en el navegador de quienes la visitan."}
+        </p>
       </main>
       <Pie />
     </>

@@ -6,8 +6,10 @@ import { sitio } from "@/contenido/sitio";
 
 const enlaces = [
   { href: "/#trabajos", texto: "Trabajos" },
-  { href: "/#servicios", texto: "Servicios" },
-  { href: "/#sobre-mi", texto: "Sobre mí" },
+  ...(sitio.videos.length ? [{ href: "/#video", texto: "Vídeo" }] : []),
+  ...(sitio.servicios.length ? [{ href: "/#servicios", texto: "Servicios" }] : []),
+  { href: "/#fechas", texto: "Fechas" },
+  { href: "/#sobre-mi", texto: sitio.equipo.menu },
   { href: "/#preguntas", texto: "Preguntas" },
 ];
 

@@ -2,14 +2,28 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Foto } from "@/contenido/sitio";
+import { sitio, type Foto } from "@/contenido/sitio";
+import { leerGaleria } from "@/lib/fotos";
 
 const TODO = "Todo";
 
-export function Galeria({ fotos }: { fotos: Foto[] }) {
+export function Galeria({ fotos: publicadas }: { fotos: Foto[] }) {
+  const [fotos, setFotos] = useState(publicadas);
+
+  useEffect(() => {
+    leerGaleria()
+      .then((lista) => {
+        if (lista) setFotos(lista);
+      })
+      .catch(() => undefined);
+  }, []);
+
   const categorias = useMemo(() => [TODO, ...new Set(fotos.map((f) => f.categoria))], [fotos]);
   const [categoria, setCategoria] = useState(TODO);
   const [abierta, setAbierta] = useState<number | null>(null);
+  const [verTodas, setVerTodas] = useState(false);
+  const automatica = sitio.galeriaAutomatica && fotos.length > 0;
+  const mosaico = !automatica || verTodas;
 
   const visibles = useMemo(
     () => (categoria === TODO ? fotos : fotos.filter((f) => f.categoria === categoria)),
@@ -20,7 +34,7 @@ export function Galeria({ fotos }: { fotos: Foto[] }) {
     <section id="trabajos" className="mx-auto max-w-[1440px] px-5 pb-24 pt-20 md:px-10 md:pb-36 md:pt-32">
       <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
         <h2 className="text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-none tracking-[-0.04em]">Trabajos</h2>
-        <div className="flex flex-wrap gap-x-6 gap-y-1 text-[17px]" role="group" aria-label="Filtrar por categoría">
+        <div hidden={!mosaico} className="flex flex-wrap gap-x-6 gap-y-1 text-[17px]" role="group" aria-label="Filtrar por categoría">
           {categorias.map((c) => (
             <button
               key={c}
@@ -37,7 +51,25 @@ export function Galeria({ fotos }: { fotos: Foto[] }) {
         </div>
       </div>
 
-      <div key={categoria} className="aparecer mt-10 columns-2 gap-2 md:mt-14 md:gap-3 lg:columns-3">
+      {automatica && (
+        <Tira
+          fotos={fotos}
+          verTodas={verTodas}
+          alVerTodas={() => setVerTodas(!verTodas)}
+          alAbrir={(i) => {
+            setCategoria(TODO);
+            setAbierta(i);
+          }}
+        />
+      )}
+
+      {sitio.notaGaleria && (
+        <p className="mt-6 text-[17px] text-ink-2">
+          {sitio.notaGaleria} <a href="#contacto" className="text-accent hover:underline">Pídelo aquí</a>.
+        </p>
+      )}
+
+      <div key={categoria} hidden={!mosaico} className="aparecer mt-10 columns-2 gap-2 md:mt-14 md:gap-3 lg:columns-3">
         {visibles.map((foto, i) => (
           <button
             key={foto.src}
@@ -63,6 +95,45 @@ export function Galeria({ fotos }: { fotos: Foto[] }) {
         <Visor fotos={visibles} inicial={abierta} alCerrar={() => setAbierta(null)} />
       )}
     </section>
+  );
+}
+
+/* Dos copias seguidas: al llegar a la mitad el movimiento vuelve al inicio sin que se note. */
+function Tira({ fotos, verTodas, alVerTodas, alAbrir }: { fotos: Foto[]; verTodas: boolean; alVerTodas: () => void; alAbrir: (indice: number) => void }) {
+  const [pausada, setPausada] = useState(false);
+
+  return (
+    <>
+      <div className="tira-marco -mx-5 mt-10 overflow-hidden md:-mx-10 md:mt-14">
+        <div className="tira flex w-max" data-pausada={pausada} style={{ animationDuration: `${fotos.length * 7}s` }}>
+          {[...fotos, ...fotos].map((foto, i) => {
+            const copia = i >= fotos.length;
+            return (
+              <button
+                key={`${foto.src}-${i}`}
+                type="button"
+                aria-hidden={copia}
+                tabIndex={copia ? -1 : undefined}
+                aria-label={`Ampliar: ${foto.alt}`}
+                onClick={() => alAbrir(i % fotos.length)}
+                className="mr-2 block h-[62vw] max-h-[620px] shrink-0 cursor-zoom-in bg-mist md:mr-3 md:h-[46vw]"
+                style={{ aspectRatio: `${foto.ancho} / ${foto.alto}` }}
+              >
+                <Image src={foto.src} alt={foto.alt} width={foto.ancho} height={foto.alto} loading="lazy" sizes="(min-width: 768px) 60vw, 90vw" className="size-full object-cover" />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div className="mt-4 flex justify-between gap-6 text-[16px]">
+        <button type="button" onClick={() => setPausada(!pausada)} className="text-ink-2 hover:text-ink">
+          {pausada ? "Reanudar" : "Pausar"}
+        </button>
+        <button type="button" onClick={alVerTodas} className="text-accent hover:underline">
+          {verTodas ? "Ocultar el mosaico" : "Ver todas las fotos"}
+        </button>
+      </div>
+    </>
   );
 }
 

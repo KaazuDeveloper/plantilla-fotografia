@@ -2,19 +2,26 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { sitio } from "@/contenido/sitio";
-import { EVENTO_SERVICIO } from "./BotonReservar";
+import { EVENTO_FECHA, EVENTO_SERVICIO } from "./BotonReservar";
+import { registrarEvento } from "@/lib/estadisticas";
 
 const campo =
   "h-12 w-full border-b border-white/30 bg-transparent text-[17px] text-white outline-none transition-colors placeholder:text-white/40 focus:border-white";
 
 export function Contacto() {
   const [servicio, setServicio] = useState("");
+  const [fecha, setFecha] = useState("");
   const [avisoDemo, setAvisoDemo] = useState<string | null>(null);
 
   useEffect(() => {
     const alElegir = (e: Event) => setServicio((e as CustomEvent<string>).detail);
+    const alElegirFecha = (e: Event) => setFecha((e as CustomEvent<string>).detail);
     window.addEventListener(EVENTO_SERVICIO, alElegir);
-    return () => window.removeEventListener(EVENTO_SERVICIO, alElegir);
+    window.addEventListener(EVENTO_FECHA, alElegirFecha);
+    return () => {
+      window.removeEventListener(EVENTO_SERVICIO, alElegir);
+      window.removeEventListener(EVENTO_FECHA, alElegirFecha);
+    };
   }, []);
 
   const enviar = (evento: FormEvent<HTMLFormElement>) => {
@@ -36,13 +43,14 @@ export function Contacto() {
       setAvisoDemo(canal === "correo" ? "tu correo" : "tu WhatsApp");
       return;
     }
+    registrarEvento({ tipo: "contacto", canal: canal === "correo" ? "correo" : "whatsapp" });
     const texto = encodeURIComponent(mensaje);
-    window.open(
-      canal === "correo"
-        ? `mailto:${sitio.contacto.email}?subject=${encodeURIComponent(`Presupuesto: ${datos.get("servicio") || "sesión de fotos"}`)}&body=${texto}`
-        : `https://wa.me/${sitio.contacto.whatsapp}?text=${texto}`,
-      "_blank",
-    );
+    if (canal === "correo") {
+      const asunto = encodeURIComponent(`Presupuesto: ${datos.get("servicio") || "sesión de fotos"}`);
+      window.location.href = `mailto:${sitio.contacto.email}?subject=${asunto}&body=${texto}`;
+    } else {
+      window.open(`https://wa.me/${sitio.contacto.whatsapp}?text=${texto}`, "_blank", "noopener");
+    }
   };
 
   const { contacto } = sitio;
@@ -80,11 +88,11 @@ export function Contacto() {
               className={`${campo} ${servicio ? "" : "text-white/40"}`}
             >
               <option value="" className="text-ink">¿Qué necesitas?</option>
-              {sitio.servicios.map((s) => (
-                <option key={s.nombre} value={s.nombre} className="text-ink">{s.nombre}</option>
+              {(sitio.opcionesContacto.length ? sitio.opcionesContacto : sitio.servicios.map((s) => s.nombre)).map((opcion) => (
+                <option key={opcion} value={opcion} className="text-ink">{opcion}</option>
               ))}
             </select>
-            <input name="fecha" placeholder="Fecha aproximada" aria-label="Fecha aproximada" className={campo} />
+            <input name="fecha" value={fecha} onChange={(e) => setFecha(e.target.value)} placeholder="Fecha aproximada" aria-label="Fecha aproximada" className={campo} />
           </div>
           <textarea
             name="mensaje"
