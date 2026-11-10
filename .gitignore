@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# fotos originales del cliente (la web usa las de public/galeria)
+/fotos-cliente/*/*
+!/fotos-cliente/*/.gitkeep

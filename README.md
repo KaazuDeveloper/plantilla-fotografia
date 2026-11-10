@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plantilla web para fotógrafos
 
-## Getting Started
+Web de una página para vender servicios de fotografía: portada a pantalla completa, galería por categorías con visor,
+servicios y precios, sobre mí, opiniones, preguntas frecuentes y contacto por WhatsApp o correo.
 
-First, run the development server:
+Hecha con Next.js, TypeScript y Tailwind. No necesita servidor ni base de datos.
+
+**Demo:** https://plantilla-fotografia.vercel.app
+
+## Adaptarla a un cliente
+
+Lo que hay que pedirle está en [PEDIR-AL-CLIENTE.md](PEDIR-AL-CLIENTE.md).
+
+1. **Textos y datos.** Todo está en [`contenido/sitio.ts`](contenido/sitio.ts). Pon `demo: false` para que el formulario
+   envíe de verdad y desaparezcan los avisos de contenido de ejemplo.
+2. **Galería.** Copia las fotos en `fotos-cliente/<Categoría>/`. Cada carpeta es una categoría. Después:
+
+   ```bash
+   npm run fotos
+   ```
+
+   Las reduce a tamaño web y actualiza la galería sola.
+3. **Portada, servicios y retrato.** Copia las fotos en `public/` y pon su ruta en `contenido/sitio.ts`,
+   por ejemplo `src: "/portada/1.jpg"`.
+4. **Color.** Cambia `colorAcento` en `contenido/sitio.ts`.
+5. **Dominio.** Cambia `url` en `contenido/sitio.ts` por el dominio definitivo.
+
+## Desarrollo
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Las fotos de la demo son de [Unsplash](https://unsplash.com) y hay que sustituirlas por las del cliente.
